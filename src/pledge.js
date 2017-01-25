@@ -4,7 +4,28 @@ Promises Workshop: build the pledge.js ES6-style promise library
 ----------------------------------------------------------------*/
 // YOUR CODE HERE:
 
+function $Promise(executor){
+ this._state = 'pending';
+ if(typeof executor !== 'function'){
+  throw new Error('error');
+ }
+}
 
+$Promise.prototype._internalResolve = function(data){
+  if(this._state === 'pending') {
+    this._state = 'fulfilled';
+    this._value = data;
+  }
+};
+
+$Promise.prototype._internalReject = function(data){
+  if(this._state === 'pending'){
+    this._state = 'rejected';
+    this._value = data;
+  }
+};
+
+console.dir($Promise);
 
 
 
