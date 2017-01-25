@@ -7,7 +7,6 @@ Promises Workshop: build the pledge.js ES6-style promise library
 
 function $Promise(executor){
  this._state = 'pending';
- this.executor = executor;
  this._handlerGroups = [];
 
  //console.log('#######', this._handlerGroups);
@@ -37,27 +36,47 @@ $Promise.prototype._internalReject = function(data){
   }
 };
 
-$Promise.prototype._callHandlers = function(arg){
-}
 
 $Promise.prototype.then = function(data, err){
 
   var data = typeof data !== 'function' ? false : data;
   var err = typeof err !== 'function' ? false : err;
 
-  this._handlerGroups.push(this.executor);
-  this._handlerGroups[0].successCb = data;
-  this._handlerGroups[0].errorCb = err;
+  var obj = {
+    successCb: data,
+    errorCb: err
+  }
+  this._handlerGroups.push(obj);
 
-   console.log('THIS IS DATA', data);
-   console.log('ERROR', err);
-
-  if (this._state === 'fulfilled' && typeof data === 'function'){
-    console.log('here')
-    return data();
+  if(this._state === 'fulfilled') {
+    this._callHandler(this._handlerGroups[this._handlerGroups.length -1]);
+  }
+  else {
+    
   }
 
-}
+};
+
+$Promise.prototype._callHandler = function(obj){
+
+  // console.log(this._handlerGroups[this._handlerGroups.length -1].successCb(this._value));
+
+
+  obj.successCb(this._value);
+
+};
+
+
+
+  // if (this._state === 'fulfilled' && typeof data === 'function'){
+  //   this._handlerGroups.map(function(executor){
+  //     return data(this._value);
+  //   })
+  // }
+
+
+
+
 
 
 
